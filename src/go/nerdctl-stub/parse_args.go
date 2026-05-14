@@ -347,6 +347,10 @@ func init() {
 	registerArgHandler("compose", "-f", argHandlers.filePathArgHandler)
 	registerArgHandler("compose", "--project-directory", argHandlers.filePathArgHandler)
 	registerArgHandler("compose", "--env-file", argHandlers.filePathArgHandler)
+	// nerdctl's help text renders these with a metavar because the
+	// description quotes the "volumes" Compose section, but they are booleans.
+	registerArgHandler("compose down", "--volumes", nil)
+	registerArgHandler("compose down", "-v", nil)
 	registerArgHandler("compose run", "--volume", argHandlers.volumeArgHandler)
 	registerArgHandler("compose run", "-v", argHandlers.volumeArgHandler)
 	registerArgHandler("container create", "--cidfile", argHandlers.outputPathArgHandler)

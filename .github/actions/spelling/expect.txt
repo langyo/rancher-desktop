@@ -355,6 +355,7 @@ mcapps
 mediaselect
 messageformat
 metainfo
+metavar
 metricsection
 mikey
 milli
