@@ -154,13 +154,14 @@ import { ipcRenderer } from '@pkg/utils/ipcRenderer';
  * @property { string } action
  * @property { boolean } enabled
  * @property { boolean } bulkable
- * @property { boolean } [bulkAction]
+ * @property { string } [bulkAction]
  */
 
 /**
  * @typedef { Container } RowItem An item in the table row
  * @property { Action[] } [availableActions]
  * @property { (this: Container, containers?: Container[]) => void } [stopContainer]
+ * @property { (this: Container, containers?: Container[]) => void } [restartContainer]
  * @property { (this: Container, containers?: Container[]) => void } [startContainer]
  * @property { (this: Container, containers?: Container[]) => void } [deleteContainer]
  * @property { (this: Container) => void } [viewInfo]
@@ -239,43 +240,18 @@ export default defineComponent({
         })
         .map(container => merge({}, container, {
           uptime:           container.started && dayjs(container.started).toNow(true),
-          availableActions: [
-            {
-              label:      'Info',
-              action:     'viewInfo',
-              enabled:    true,
-              bulkable:   false,
-            },
-            {
-              label:      'Stop',
-              action:     'stopContainer',
-              enabled:    this.isRunning(container),
-              bulkable:   true,
-              bulkAction: 'stopContainer',
-            },
-            {
-              label:      'Start',
-              action:     'startContainer',
-              enabled:    this.isStopped(container),
-              bulkable:   true,
-              bulkAction: 'startContainer',
-            },
-            {
-              label:      this.t('images.manager.table.action.delete'),
-              action:     'deleteContainer',
-              enabled:    this.isStopped(container),
-              bulkable:   true,
-              bulkAction: 'deleteContainer',
-            },
-          ],
-          stopContainer:   (args) => {
-            this.execCommand('stop', args?.length ? args : container);
+          availableActions: this.getContainerActions(container),
+          stopContainer:    (args) => {
+            this.execCommand('stop', this.containerCommandTarget(container, args));
+          },
+          restartContainer:   (args) => {
+            this.execCommand('restart', this.containerCommandTarget(container, args));
           },
           startContainer:   (args) => {
-            this.execCommand('start', args?.length ? args : container);
+            this.execCommand('start', this.containerCommandTarget(container, args));
           },
           deleteContainer:   (args) => {
-            this.execCommand('rm', args?.length ? args : container);
+            this.execCommand('rm', this.containerCommandTarget(container, args));
           },
           viewInfo: () => {
             this.viewInfo(container);
@@ -320,6 +296,47 @@ export default defineComponent({
     clearTimeout(this.subscribeTimer);
   },
   methods: {
+    containerCommandTarget(container, args) {
+      return args?.length ? args : container;
+    },
+    getContainerActions(container) {
+      return [
+        {
+          label:      'Info',
+          action:     'viewInfo',
+          enabled:    true,
+          bulkable:   false,
+        },
+        {
+          label:      'Stop',
+          action:     'stopContainer',
+          enabled:    this.isRunning(container),
+          bulkable:   true,
+          bulkAction: 'stopContainer',
+        },
+        {
+          label:      'Restart',
+          action:     'restartContainer',
+          enabled:    this.isRunning(container),
+          bulkable:   true,
+          bulkAction: 'restartContainer',
+        },
+        {
+          label:      'Start',
+          action:     'startContainer',
+          enabled:    this.isStopped(container),
+          bulkable:   true,
+          bulkAction: 'startContainer',
+        },
+        {
+          label:      this.t('images.manager.table.action.delete'),
+          action:     'deleteContainer',
+          enabled:    this.isStopped(container),
+          bulkable:   true,
+          bulkAction: 'deleteContainer',
+        },
+      ];
+    },
     async subscribe() {
       clearTimeout(this.subscribeTimer);
       try {

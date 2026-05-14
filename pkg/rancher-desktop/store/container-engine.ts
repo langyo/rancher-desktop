@@ -104,7 +104,7 @@ class MobyContainerSubscriber extends Subscriber {
       {
         filters: {
           type:  ['container'],
-          event: ['create', 'start', 'stop', 'die', 'kill', 'pause', 'unpause', 'rename', 'update', 'destroy', 'remove'],
+          event: ['create', 'start', 'restart', 'stop', 'die', 'kill', 'pause', 'unpause', 'rename', 'update', 'destroy', 'remove'],
         },
       });
   }
