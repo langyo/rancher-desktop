@@ -8,10 +8,9 @@ import timers from 'timers';
 
 import { CustomPublishOptions } from 'builder-util-runtime';
 import Electron from 'electron';
-import {
-  AppImageUpdater, MacUpdater, AppUpdater, ProgressInfo, UpdateInfo,
-} from 'electron-updater';
+import { AppImageUpdater } from 'electron-updater/out/AppImageUpdater';
 import { ElectronAppAdapter } from 'electron-updater/out/ElectronAppAdapter';
+import { MacUpdater } from 'electron-updater/out/MacUpdater';
 import yaml from 'yaml';
 
 import LonghornProvider, { hasQueuedUpdate, LonghornUpdateInfo, setHasQueuedUpdate } from './LonghornProvider';
@@ -21,6 +20,8 @@ import { Settings } from '@pkg/config/settings';
 import mainEvent from '@pkg/main/mainEvents';
 import Logging from '@pkg/utils/logging';
 import * as window from '@pkg/window';
+
+import type { AppUpdater, ProgressInfo, UpdateInfo } from 'electron-updater';
 
 const console = Logging.update;
 

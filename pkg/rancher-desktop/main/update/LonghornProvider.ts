@@ -6,14 +6,16 @@ import util from 'util';
 
 import { newError, CustomPublishOptions } from 'builder-util-runtime';
 import Electron, { net } from 'electron';
-import { AppUpdater, Provider, ResolvedUpdateFileInfo, UpdateInfo } from 'electron-updater';
-import { ProviderRuntimeOptions, ProviderPlatform } from 'electron-updater/out/providers/Provider';
+import { Provider } from 'electron-updater/out/providers/Provider';
 import semver from 'semver';
 
 import Logging from '@pkg/utils/logging';
 import { getMacOsVersion } from '@pkg/utils/osVersion';
 import paths from '@pkg/utils/paths';
 import getWSLVersion from '@pkg/utils/wslVersion';
+
+import type { AppUpdater, ResolvedUpdateFileInfo, UpdateInfo } from 'electron-updater';
+import type { ProviderRuntimeOptions, ProviderPlatform } from 'electron-updater/out/providers/Provider';
 
 const console = Logging.update;
 const gCachePath = path.join(paths.cache, 'updater-longhorn.json');
